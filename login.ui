@@ -131,6 +131,9 @@ QPushButton::pressed{background-color :rgb(50, 50,50);}</string>
        <height>13</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="lineWidth">
       <number>1</number>
      </property>
