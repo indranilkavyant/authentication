@@ -2,12 +2,14 @@ from hashlib import md5
 from PyQt5 import uic, QtWidgets
 import sys
 import sqlite3 as db
+import platform
 
 # ==================== Database Connection and table creation if no exist =======================
 database = db.connect("kavyant.db")
 cusror = database.cursor()
 cusror.execute("CREATE TABLE IF NOT EXISTS auth_user(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME VARCHAR(256) UNIQUE, PASSWORD VARCHAR(256) , USERGROUP VARCHAR(50), ACTIVATED BOOL, CREATED_AT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)")
 cusror.execute("CREATE TABLE IF NOT EXISTS requests( ID INTEGER PRIMARY KEY AUTOINCREMENT , USERNAME VARCHAR(256) , REQUESTTYPE VARCHAR(256) )")
+cusror.execute("CREATE TABLE IF NOT EXISTS login_count(ID INTEGER PRIMARY KEY AUTOINCREMENT, HOST VARCHAR(256), COUNT INTEGER(5))")
 # ==================== Database Connection and table creation if no exist =======================
 
 class AdminPanel(QtWidgets.QDialog):
@@ -88,19 +90,35 @@ class Login(QtWidgets.QDialog):
         self.show()
 
     def login(self):
+        cusror.execute(f"SELECT * FROM login_count WHERE HOST = '{platform.node()}'")
+        host = cusror.fetchall()
+        if not host :
+            cusror.execute(f"INSERT INTO login_count (HOST, COUNT) VALUES ('{platform.node()}', '5')")
+            database.commit()
+
         if self.username.text() == "" or self.password.text() == "":
             self.fail.setText("Enter Login Id and Password!")
         else:
-            password = md5(bytes(self.password.text(),"utf-8")).hexdigest()
-            cusror.execute(f"SELECT * FROM auth_user WHERE USERNAME = '{self.username.text()}' AND PASSWORD = '{password}'")     
-            user = cusror.fetchall()
-            if user:
-                if user[0][3] == 'admin':
-                    self.adminPanel()
+            cusror.execute(f"SELECT COUNT FROM login_count WHERE HOST = '{platform.node()}'")
+            count = cusror.fetchall()
+            
+            if count[0][0] > 0 :
+                password = md5(bytes(self.password.text(),"utf-8")).hexdigest()
+                cusror.execute(f"SELECT * FROM auth_user WHERE USERNAME = '{self.username.text()}' AND PASSWORD = '{password}'")     
+                user = cusror.fetchall()
+                if user:
+                    cusror.execute(f"UPDATE login_count SET COUNT = '5' WHERE HOST = '{platform.node()}'")
+                    database.commit()
+                    if user[0][3] == 'admin':
+                        self.adminPanel()
+                    else :
+                        print("Welcome to main app!")
                 else :
-                    print("Welcome to main app!")
+                    cusror.execute(f"UPDATE login_count SET COUNT = '{count[0][0]-1}' WHERE HOST = '{platform.node()}'")
+                    database.commit()
+                    self.fail.setText(f"Incorrect Credential! Attempts left : {count[0][0]-1}")    
             else :
-                self.fail.setText("Incorrect Credential!")    
+                self.fail.setText("Attempts left : 0 Please ask admin to reset count!")
 
     def adminPanel(self):
         self.close()
