@@ -10,12 +10,72 @@ cusror = database.cursor()
 cusror.execute("CREATE TABLE IF NOT EXISTS auth_user(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME VARCHAR(256) UNIQUE, PASSWORD VARCHAR(256) , USERGROUP VARCHAR(50), ACTIVATED BOOL, CREATED_AT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)")
 cusror.execute("CREATE TABLE IF NOT EXISTS requests( ID INTEGER PRIMARY KEY AUTOINCREMENT , USERNAME VARCHAR(256) , REQUESTTYPE VARCHAR(256) )")
 cusror.execute("CREATE TABLE IF NOT EXISTS login_count(ID INTEGER PRIMARY KEY AUTOINCREMENT, HOST VARCHAR(256), COUNT INTEGER(5))")
+cusror.execute("CREATE TABLE IF NOT EXISTS action_record (ID INTEGER PRIMARY KEY AUTOINCREMENT ,  USERNAME VARCHAR (256) , ACTIONTIME DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , TYPEOFACTION VARCHAR(256), NEW_VALUE VARCHAR(256) DEFAULT NULL ,DOCUMENT_NAME VARCHAR(256) DEFAULT NULL, COMPUTERNAME VARCHAR(256), EXTRA1 VARCHAR(256) DEFAULT NULL , EXTRA2 DEFAULT NULL ) ")
+cusror.execute("CREATE TABLE IF NOT EXISTS login_record  (ID INTEGER PRIMARY KEY AUTOINCREMENT , USERNAME VARCHAR(256),STATUS VARCHAR(20), COMPUTERNAME VARCHAR(150) , EXTRA1 TEXT DEFAULT NULL, EXTRA2 TEXT DEFAULT NULL, ATTEMPTED_AT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP )") 
+
 # ==================== Database Connection and table creation if no exist =======================
 
 class AdminPanel(QtWidgets.QDialog):
     def __init__(self):
         super().__init__()
         self.admin_panel = uic.loadUi('admin_panel.ui', self)
+        self.audit_trail_rows = cusror.execute("SELECT * from action_record")
+        self.audit_trail_data = self.audit_trail_rows.fetchall()
+        self.user_login_record_rows = cusror.execute("select * from login_record")
+        self.user_login_record_data = self.user_login_record_rows.fetchall()
+        self.users_row = cusror.execute("select * from auth_user")
+        self.user_data = self.users_row.fetchall()
+        self.password=""
+        self.username= ""
+        self.user_group ="admin"
+
+    def insertuser(self):
+        password = self.password
+        username = self.username
+        usergroup = self.user_group
+        try:
+            password = md5(bytes(password,"utf-8")).hexdigest()
+            
+
+            self.cusror.execute("INSERT INTO auth_user(USERNAME, PASSWORD, USERGROUP, ACTIVATED)VALUES(?,?,?,?)",(username,password,usergroup,True))
+            self.database.commit()
+            return "inserted"
+        except:
+            return "error "
+    
+    def changepassword(self):
+        username =""
+        password = ""
+        try:
+            cusror.execute("UPDATE auth_user SET PASSWORD = ? WHERE USERNAME =? ",(password, username))
+        except:
+            pass
+    def deactivateuser(self):
+        username =""
+        try:
+            cusror.execute("UPDATE auth_user SET ACTIVATED = 0 WHERE USERNAME =? ",( username))
+        except:
+            pass
+    def activateuser(self):
+        username =""
+        try:
+            cusror.execute("UPDATE auth_user SET ACTIVATED = 1 WHERE USERNAME =? ",( username))
+        except:
+            pass
+    
+    def remove_user(self):
+        username =""
+        try:
+            cusror.execute("DELETE FROM auth_user WHERE username = ?",(username))
+        except:
+            pass
+
+
+    
+    
+
+
+
 
 
 class ForgetPassword(QtWidgets.QDialog):
