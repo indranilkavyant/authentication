@@ -79,8 +79,16 @@ class AdminPanel(QtWidgets.QDialog):
     def export_login_record(self):
         cusror.execute("SELECT * FROM login_record")
         login_records = cusror.fetchall()
-        data = pd.DataFrame(login_records)
+        login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
+        data = pd.DataFrame(login_record_with_header)
         data.to_csv("login_record.csv")
+
+    def export_user_record(self):
+        cusror.execute("SELECT * FROM auth_user")
+        user_record = cusror.fetchall()
+        user_record_with_header = [("ID","USERNAME","PASSWORD","USERGROUP", "ACTIVATED","CREATED_AT")]+user_record
+        data = pd.DataFrame(user_record_with_header)
+        data.to_csv("users_record.csv")
 
     def print_record(self):
         cusror.execute("SELECT * FROM login_record")
