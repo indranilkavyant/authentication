@@ -31,8 +31,11 @@ class AdminPanel(QtWidgets.QDialog):
         self.admin_panel.buttonAdminPanel_ActivateUser.clicked.connect(self.activateuser)
         self.admin_panel.buttonAdminPanel_ResetUserPassword.clicked.connect(self.changepassword)
         self.admin_panel.buttonAdminPanel_ExportLoginList.clicked.connect(self.export_login_record)
+        self.admin_panel.buttonAdminPanel_ExportUserList.clicked.connect(self.export_user_record)
+        self.admin_panel.buttonPasswordReset_Cancel.clicked.connect(self.close)
+        
         self.msg = self.findChild(QtWidgets.QLabel,"messege")
-        self.msg.setStyleSheet("color: rgb(200, 50, 50);font: bold;")
+        self.msg.setStyleSheet("color: rgb(200, 50, 50);font: bold;font-size:15px;")
 
         self.showLoginRecords()
         self.showUsers()
@@ -82,6 +85,7 @@ class AdminPanel(QtWidgets.QDialog):
         login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
         data = pd.DataFrame(login_record_with_header)
         data.to_csv("login_record.csv")
+        self.msg.setText("Login records successfully exported!")
 
     def export_user_record(self):
         cusror.execute("SELECT * FROM auth_user")
@@ -89,6 +93,7 @@ class AdminPanel(QtWidgets.QDialog):
         user_record_with_header = [("ID","USERNAME","PASSWORD","USERGROUP", "ACTIVATED","CREATED_AT")]+user_record
         data = pd.DataFrame(user_record_with_header)
         data.to_csv("users_record.csv")
+        self.msg.setText("User list successfully exported!")
 
     def print_record(self):
         cusror.execute("SELECT * FROM login_record")
