@@ -21,15 +21,11 @@ class AdminPanel(QtWidgets.QDialog):
         super().__init__()
         self.admin_panel = uic.loadUi('admin_panel.ui', self)
         self.audit_trail_rows = cusror.execute("SELECT * from action_record")
-        self.audit_trail_data = self.audit_trail_rows.fetchall()
-        cusror.execute("SELECT * FROM auth_user")
-        users = cusror.fetchall()
-        usernames = [i[1] for i  in users]
+        self.audit_trail_data = self.audit_trail_rows.fetchall()        
         self.password=self.findChild(QtWidgets.QLineEdit,"lineAdminPanel_OneTimePassword")
         self.username= self.findChild(QtWidgets.QLineEdit,"lineAdminPanel_NewUser")
         self.user_group =self.findChild(QtWidgets.QComboBox,"comboAdminPanel_UserGroup")
         self.users =self.findChild(QtWidgets.QComboBox,"userlist")
-        self.users.addItems(usernames)
         self.admin_panel.buttonAdminPanel_AddUser.clicked.connect(self.insertuser)
         self.admin_panel.buttonAdminPanel_RemoveUser.clicked.connect(self.remove_user)
         self.admin_panel.buttonAdminPanel_ActivateUser.clicked.connect(self.activateuser)
@@ -40,6 +36,14 @@ class AdminPanel(QtWidgets.QDialog):
 
         self.showLoginRecords()
         self.showUsers()
+        self.update_userlist()
+
+    def update_userlist(self):
+        cusror.execute("SELECT * FROM auth_user")
+        users = cusror.fetchall()
+        usernames = [i[1] for i  in users]
+        self.users.clear()
+        self.users.addItems(usernames)
 
     def showUsers(self):
         self.tableWidget = self.findChild(QtWidgets.QTableWidget,"tableAdminPanel_UserList")
@@ -77,12 +81,11 @@ class AdminPanel(QtWidgets.QDialog):
         login_records = cusror.fetchall()
         data = pd.DataFrame(login_records)
         data.to_csv("login_record.csv")
+
     def print_record(self):
         cusror.execute("SELECT * FROM login_record")
         login_records = cusror.fetchall()
-        data = pd.DataFrame(login_records)
-        
-
+        data = pd.DataFrame(login_records)      
 
 
     def insertuser(self):
@@ -95,6 +98,7 @@ class AdminPanel(QtWidgets.QDialog):
             cusror.execute("INSERT INTO auth_user(USERNAME, PASSWORD, USERGROUP, ACTIVATED)VALUES(?,?,?,?)",(username,password,usergroup,True))
             database.commit()
             self.msg.setText("New User Added!")
+            self.update_userlist()
             self.showUsers()
             return "inserted"
         except:
@@ -108,8 +112,10 @@ class AdminPanel(QtWidgets.QDialog):
         try:
             cusror.execute("UPDATE auth_user SET PASSWORD= ? WHERE USERNAME= ? ",(password, username))
             database.commit()
+            self.msg.setText(f"Password has been reset for user : {username}")
         except Exception as e:
             print(e)
+            
     def deactivateuser(self):
         username =self.users.currentText()
         try:
@@ -128,18 +134,11 @@ class AdminPanel(QtWidgets.QDialog):
         try:
             cusror.execute("DELETE FROM auth_user WHERE username= ? ",(username,))
             database.commit()
+            self.update_userlist()
             self.showUsers()
-            self.msg.setText(f"{username} deleted")
+            self.msg.setText(f"User : {username} has been removed!")
         except Exception as e :
             print(e)
-
-
-    
-    
-
-
-
-
 
 class ForgetPassword(QtWidgets.QDialog):
     def __init__(self):
