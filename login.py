@@ -3,6 +3,7 @@ from PyQt5 import uic, QtWidgets
 import sys
 import sqlite3 as db
 import platform
+import pandas as pd
 
 # ==================== Database Connection and table creation if no exist =======================
 database = db.connect("kavyant.db")
@@ -21,10 +22,19 @@ class AdminPanel(QtWidgets.QDialog):
         self.admin_panel = uic.loadUi('admin_panel.ui', self)
         self.audit_trail_rows = cusror.execute("SELECT * from action_record")
         self.audit_trail_data = self.audit_trail_rows.fetchall()
+        cusror.execute("SELECT * FROM auth_user")
+        users = cusror.fetchall()
+        usernames = [i[1] for i  in users]
         self.password=self.findChild(QtWidgets.QLineEdit,"lineAdminPanel_OneTimePassword")
         self.username= self.findChild(QtWidgets.QLineEdit,"lineAdminPanel_NewUser")
         self.user_group =self.findChild(QtWidgets.QComboBox,"comboAdminPanel_UserGroup")
+        self.users =self.findChild(QtWidgets.QComboBox,"userlist")
+        self.users.addItems(usernames)
         self.admin_panel.buttonAdminPanel_AddUser.clicked.connect(self.insertuser)
+        self.admin_panel.buttonAdminPanel_RemoveUser.clicked.connect(self.remove_user)
+        self.admin_panel.buttonAdminPanel_ActivateUser.clicked.connect(self.activateuser)
+        self.admin_panel.buttonAdminPanel_ResetUserPassword.clicked.connect(self.changepassword)
+        self.admin_panel.buttonAdminPanel_ExportLoginList.clicked.connect(self.export_login_record)
         self.msg = self.findChild(QtWidgets.QLabel,"messege")
         self.msg.setStyleSheet("color: rgb(200, 50, 50);font: bold;")
 
@@ -62,6 +72,19 @@ class AdminPanel(QtWidgets.QDialog):
             self.tableWidget.setItem(id,5, QtWidgets.QTableWidgetItem(""))
             self.tableWidget.setItem(id,6, QtWidgets.QTableWidgetItem(""))
 
+    def export_login_record(self):
+        cusror.execute("SELECT * FROM login_record")
+        login_records = cusror.fetchall()
+        data = pd.DataFrame(login_records)
+        data.to_csv("login_record.csv")
+    def print_record(self):
+        cusror.execute("SELECT * FROM login_record")
+        login_records = cusror.fetchall()
+        data = pd.DataFrame(login_records)
+        
+
+
+
     def insertuser(self):
         password = self.password.text()
         username = self.username.text()
@@ -79,31 +102,36 @@ class AdminPanel(QtWidgets.QDialog):
             return "error "
     
     def changepassword(self):
-        username =""
-        password = ""
+        username =username =self.users.currentText()
+        password = "12345678"
+        password = md5(bytes(password,"utf-8")).hexdigest()
         try:
-            cusror.execute("UPDATE auth_user SET PASSWORD = ? WHERE USERNAME =? ",(password, username))
-        except:
-            pass
+            cusror.execute("UPDATE auth_user SET PASSWORD= ? WHERE USERNAME= ? ",(password, username))
+            database.commit()
+        except Exception as e:
+            print(e)
     def deactivateuser(self):
-        username =""
+        username =self.users.currentText()
         try:
-            cusror.execute("UPDATE auth_user SET ACTIVATED = 0 WHERE USERNAME =? ",( username))
+            cusror.execute("UPDATE auth_user SET ACTIVATED = 0 WHERE USERNAME= ? ",( username,))
         except:
             pass
     def activateuser(self):
-        username =""
+        username =self.users.currentText()
         try:
-            cusror.execute("UPDATE auth_user SET ACTIVATED = 1 WHERE USERNAME =? ",( username))
+            cusror.execute("UPDATE auth_user SET ACTIVATED = 1 WHERE USERNAME= ? ",( username,))
         except:
             pass
     
     def remove_user(self):
-        username =""
+        username =self.users.currentText()
         try:
-            cusror.execute("DELETE FROM auth_user WHERE username = ?",(username))
-        except:
-            pass
+            cusror.execute("DELETE FROM auth_user WHERE username= ? ",(username,))
+            database.commit()
+            self.showUsers()
+            self.msg.setText(f"{username} deleted")
+        except Exception as e :
+            print(e)
 
 
     
