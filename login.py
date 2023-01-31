@@ -21,26 +21,60 @@ class AdminPanel(QtWidgets.QDialog):
         self.admin_panel = uic.loadUi('admin_panel.ui', self)
         self.audit_trail_rows = cusror.execute("SELECT * from action_record")
         self.audit_trail_data = self.audit_trail_rows.fetchall()
-        self.user_login_record_rows = cusror.execute("select * from login_record")
-        self.user_login_record_data = self.user_login_record_rows.fetchall()
-        self.users_row = cusror.execute("select * from auth_user")
-        self.user_data = self.users_row.fetchall()
-        self.password=""
-        self.username= ""
-        self.user_group ="admin"
+        self.password=self.findChild(QtWidgets.QLineEdit,"lineAdminPanel_OneTimePassword")
+        self.username= self.findChild(QtWidgets.QLineEdit,"lineAdminPanel_NewUser")
+        self.user_group =self.findChild(QtWidgets.QComboBox,"comboAdminPanel_UserGroup")
+        self.admin_panel.buttonAdminPanel_AddUser.clicked.connect(self.insertuser)
+        self.msg = self.findChild(QtWidgets.QLabel,"messege")
+        self.msg.setStyleSheet("color: rgb(200, 50, 50);font: bold;")
+
+        self.showLoginRecords()
+        self.showUsers()
+
+    def showUsers(self):
+        self.tableWidget = self.findChild(QtWidgets.QTableWidget,"tableAdminPanel_UserList")
+        cusror.execute("SELECT * FROM auth_user")
+        users = cusror.fetchall()
+        self.tableWidget.setRowCount(len(users))
+        self.tableWidget.setColumnCount(6)  
+
+        for id, item in enumerate(users):
+            self.tableWidget.setItem(id,0, QtWidgets.QTableWidgetItem(item[1]))
+            self.tableWidget.setItem(id,1, QtWidgets.QTableWidgetItem(item[3]))
+            self.tableWidget.setItem(id,2, QtWidgets.QTableWidgetItem(item[5][0:10]))
+            self.tableWidget.setItem(id,3, QtWidgets.QTableWidgetItem("Yes" if item[4] == 1 else "No"))
+            self.tableWidget.setItem(id,4, QtWidgets.QTableWidgetItem(""))
+            self.tableWidget.setItem(id,5, QtWidgets.QTableWidgetItem(""))
+
+    def showLoginRecords(self):
+        self.tableWidget = self.findChild(QtWidgets.QTableWidget,"tableAdminPanel_LoginList")
+        cusror.execute("SELECT * FROM login_record")
+        login_records = cusror.fetchall()
+        self.tableWidget.setRowCount(len(login_records))
+        self.tableWidget.setColumnCount(7)  
+
+        for id, item in enumerate(login_records):
+            self.tableWidget.setItem(id,0, QtWidgets.QTableWidgetItem(item[1]))
+            self.tableWidget.setItem(id,1, QtWidgets.QTableWidgetItem(item[6][11:19]))
+            self.tableWidget.setItem(id,2, QtWidgets.QTableWidgetItem(item[6][0:10]))
+            self.tableWidget.setItem(id,3, QtWidgets.QTableWidgetItem(item[2]))
+            self.tableWidget.setItem(id,4, QtWidgets.QTableWidgetItem(item[3]))
+            self.tableWidget.setItem(id,5, QtWidgets.QTableWidgetItem(""))
+            self.tableWidget.setItem(id,6, QtWidgets.QTableWidgetItem(""))
 
     def insertuser(self):
-        password = self.password
-        username = self.username
-        usergroup = self.user_group
+        password = self.password.text()
+        username = self.username.text()
+        usergroup = self.user_group.currentText().lower()
+        print(password, usergroup, username)
         try:
-            password = md5(bytes(password,"utf-8")).hexdigest()
-            
-
-            self.cusror.execute("INSERT INTO auth_user(USERNAME, PASSWORD, USERGROUP, ACTIVATED)VALUES(?,?,?,?)",(username,password,usergroup,True))
-            self.database.commit()
+            password = md5(bytes(password,"utf-8")).hexdigest()          
+            cusror.execute("INSERT INTO auth_user(USERNAME, PASSWORD, USERGROUP, ACTIVATED)VALUES(?,?,?,?)",(username,password,usergroup,True))
+            database.commit()
+            self.msg.setText("New User Added!")
             return "inserted"
         except:
+            self.msg.setText("There is a problem. Try later.")
             return "error "
     
     def changepassword(self):

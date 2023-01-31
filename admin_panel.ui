@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1066</width>
-    <height>811</height>
+    <width>1050</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -72,7 +72,7 @@ QTabBar::tab:!selected {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabAdmin">
       <attribute name="title">
@@ -240,22 +240,12 @@ QPushButton::pressed{background-color :rgb(50, 50,50);}</string>
          </row>
          <column>
           <property name="text">
-           <string>User ID</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
            <string>User Name</string>
           </property>
          </column>
          <column>
           <property name="text">
            <string>User Group</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Password Status</string>
           </property>
          </column>
          <column>
@@ -280,135 +270,95 @@ QPushButton::pressed{background-color :rgb(50, 50,50);}</string>
          </column>
          <item row="0" column="0">
           <property name="text">
-           <string>admin1</string>
+           <string>Main Admin</string>
           </property>
          </item>
          <item row="0" column="1">
           <property name="text">
-           <string>Main Admin</string>
+           <string>Admin</string>
           </property>
          </item>
          <item row="0" column="2">
           <property name="text">
-           <string>Admin</string>
+           <string>01/01/2023</string>
           </property>
          </item>
          <item row="0" column="3">
           <property name="text">
-           <string>Valid</string>
+           <string>Yes</string>
           </property>
          </item>
          <item row="0" column="4">
           <property name="text">
-           <string>01/01/2023</string>
-          </property>
-         </item>
-         <item row="0" column="5">
-          <property name="text">
-           <string>Yes</string>
-          </property>
-         </item>
-         <item row="0" column="6">
-          <property name="text">
            <string>Unimplemented</string>
           </property>
          </item>
-         <item row="0" column="7">
+         <item row="0" column="5">
           <property name="text">
            <string>Future Use</string>
           </property>
          </item>
          <item row="1" column="0">
           <property name="text">
-           <string>user1</string>
+           <string>First User</string>
           </property>
          </item>
          <item row="1" column="1">
           <property name="text">
-           <string>First User</string>
+           <string>User</string>
           </property>
          </item>
          <item row="1" column="2">
           <property name="text">
-           <string>User</string>
-          </property>
-         </item>
-         <item row="1" column="3">
-          <property name="text">
-           <string>Valid</string>
-          </property>
-         </item>
-         <item row="1" column="4">
-          <property name="text">
            <string>02/01/2023</string>
           </property>
          </item>
-         <item row="1" column="5">
+         <item row="1" column="3">
           <property name="text">
            <string>Yes</string>
           </property>
          </item>
          <item row="2" column="0">
           <property name="text">
-           <string>user2</string>
+           <string>Second User</string>
           </property>
          </item>
          <item row="2" column="1">
           <property name="text">
-           <string>Second User</string>
+           <string>User</string>
           </property>
          </item>
          <item row="2" column="2">
           <property name="text">
-           <string>User</string>
-          </property>
-         </item>
-         <item row="2" column="3">
-          <property name="text">
-           <string>Uninitialized</string>
-          </property>
-         </item>
-         <item row="2" column="4">
-          <property name="text">
            <string>02/01/2023</string>
           </property>
          </item>
-         <item row="2" column="5">
+         <item row="2" column="3">
           <property name="text">
            <string>Yes</string>
           </property>
          </item>
          <item row="3" column="0">
           <property name="text">
-           <string>viewer1</string>
+           <string>First Viewer</string>
           </property>
          </item>
          <item row="3" column="1">
           <property name="text">
-           <string>First Viewer</string>
+           <string>Viewer</string>
           </property>
          </item>
          <item row="3" column="2">
           <property name="text">
-           <string>Viewer</string>
+           <string>03/01/2023</string>
           </property>
          </item>
          <item row="3" column="3">
           <property name="text">
-           <string>Valid</string>
-          </property>
-         </item>
-         <item row="3" column="4">
-          <property name="text">
-           <string>03/01/2023</string>
-          </property>
-         </item>
-         <item row="3" column="5">
-          <property name="text">
            <string>Yes</string>
           </property>
          </item>
-         <item row="3" column="6">
+         <item row="3" column="4">
           <property name="text">
            <string/>
           </property>
@@ -559,13 +509,13 @@ font: bold;
                   </size>
                  </property>
                  <property name="text">
-                  <string>password</string>
+                  <string/>
                  </property>
                  <property name="echoMode">
                   <enum>QLineEdit::Normal</enum>
                  </property>
                  <property name="placeholderText">
-                  <string>keyword</string>
+                  <string/>
                  </property>
                 </widget>
                </item>
@@ -1694,11 +1644,6 @@ QPushButton::pressed{background-color :rgb(50, 50,50);}</string>
          </row>
          <column>
           <property name="text">
-           <string>User ID</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
            <string>User Name</string>
           </property>
          </column>
@@ -1734,315 +1679,265 @@ QPushButton::pressed{background-color :rgb(50, 50,50);}</string>
          </column>
          <item row="0" column="0">
           <property name="text">
-           <string>admin1</string>
+           <string>Main Admin</string>
           </property>
          </item>
          <item row="0" column="1">
           <property name="text">
-           <string>Main Admin</string>
+           <string>10:00:00</string>
           </property>
          </item>
          <item row="0" column="2">
           <property name="text">
-           <string>10:00:00</string>
+           <string>01/01/2023</string>
           </property>
          </item>
          <item row="0" column="3">
           <property name="text">
-           <string>01/01/2023</string>
+           <string>Login OK</string>
           </property>
          </item>
          <item row="0" column="4">
           <property name="text">
-           <string>Login OK</string>
+           <string>Laptop Dell AA12</string>
           </property>
          </item>
          <item row="0" column="5">
           <property name="text">
-           <string>Laptop Dell AA12</string>
-          </property>
-         </item>
-         <item row="0" column="6">
-          <property name="text">
            <string>Unimplemented</string>
           </property>
          </item>
-         <item row="0" column="7">
+         <item row="0" column="6">
           <property name="text">
            <string>Future Use</string>
           </property>
          </item>
          <item row="1" column="0">
           <property name="text">
-           <string>admin1</string>
+           <string>Main Admin</string>
           </property>
          </item>
          <item row="1" column="1">
           <property name="text">
-           <string>Main Admin</string>
+           <string>11:00:00</string>
           </property>
          </item>
          <item row="1" column="2">
           <property name="text">
-           <string>11:00:00</string>
+           <string>01/01/2023</string>
           </property>
          </item>
          <item row="1" column="3">
           <property name="text">
-           <string>01/01/2023</string>
-          </property>
-         </item>
-         <item row="1" column="4">
-          <property name="text">
            <string>Logout</string>
           </property>
          </item>
-         <item row="1" column="5">
+         <item row="1" column="4">
           <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
          </item>
          <item row="2" column="0">
           <property name="text">
-           <string>user1</string>
+           <string>First User</string>
           </property>
          </item>
          <item row="2" column="1">
           <property name="text">
-           <string>First User</string>
+           <string>12:00:00</string>
           </property>
          </item>
          <item row="2" column="2">
           <property name="text">
-           <string>12:00:00</string>
+           <string>02/01/2023 </string>
           </property>
          </item>
          <item row="2" column="3">
           <property name="text">
-           <string>02/01/2023 </string>
-          </property>
-         </item>
-         <item row="2" column="4">
-          <property name="text">
            <string>Login OK</string>
           </property>
          </item>
-         <item row="2" column="5">
+         <item row="2" column="4">
           <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
          </item>
          <item row="3" column="0">
           <property name="text">
-           <string>user1</string>
+           <string>First User</string>
           </property>
          </item>
          <item row="3" column="1">
           <property name="text">
-           <string>First User</string>
+           <string>13:00:00</string>
           </property>
          </item>
          <item row="3" column="2">
           <property name="text">
-           <string>13:00:00</string>
+           <string>02/01/2023 </string>
           </property>
          </item>
          <item row="3" column="3">
           <property name="text">
-           <string>02/01/2023 </string>
+           <string>Logout</string>
           </property>
          </item>
          <item row="3" column="4">
           <property name="text">
-           <string>Logout</string>
-          </property>
-         </item>
-         <item row="3" column="5">
-          <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
          </item>
-         <item row="3" column="6">
+         <item row="3" column="5">
           <property name="text">
            <string/>
           </property>
          </item>
          <item row="4" column="0">
           <property name="text">
-           <string>user2</string>
+           <string>Second User</string>
           </property>
          </item>
          <item row="4" column="1">
           <property name="text">
-           <string>Second User</string>
+           <string>14:00:00</string>
           </property>
          </item>
          <item row="4" column="2">
           <property name="text">
-           <string>14:00:00</string>
+           <string>03/01/2023 </string>
           </property>
          </item>
          <item row="4" column="3">
           <property name="text">
-           <string>03/01/2023 </string>
-          </property>
-         </item>
-         <item row="4" column="4">
-          <property name="text">
            <string>Login OK</string>
           </property>
          </item>
-         <item row="4" column="5">
+         <item row="4" column="4">
           <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
          </item>
          <item row="5" column="0">
           <property name="text">
-           <string>user2</string>
+           <string>Second User</string>
           </property>
          </item>
          <item row="5" column="1">
           <property name="text">
-           <string>Second User</string>
+           <string>15:00:00</string>
           </property>
          </item>
          <item row="5" column="2">
           <property name="text">
-           <string>15:00:00</string>
+           <string>03/01/2023 </string>
           </property>
          </item>
          <item row="5" column="3">
           <property name="text">
-           <string>03/01/2023 </string>
-          </property>
-         </item>
-         <item row="5" column="4">
-          <property name="text">
            <string>Logout</string>
           </property>
          </item>
-         <item row="5" column="5">
+         <item row="5" column="4">
           <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
          </item>
          <item row="6" column="0">
           <property name="text">
-           <string>viewer1</string>
+           <string>First Viewer</string>
           </property>
          </item>
          <item row="6" column="1">
           <property name="text">
-           <string>First Viewer</string>
+           <string>16:00:00</string>
           </property>
          </item>
          <item row="6" column="2">
           <property name="text">
-           <string>16:00:00</string>
+           <string>04/01/2023 </string>
           </property>
          </item>
          <item row="6" column="3">
           <property name="text">
-           <string>04/01/2023 </string>
-          </property>
-         </item>
-         <item row="6" column="4">
-          <property name="text">
            <string>Login OK</string>
           </property>
          </item>
-         <item row="6" column="5">
+         <item row="6" column="4">
           <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
          </item>
          <item row="7" column="0">
           <property name="text">
-           <string>viewer1</string>
+           <string>First Viewer</string>
           </property>
          </item>
          <item row="7" column="1">
           <property name="text">
-           <string>First Viewer</string>
+           <string>17:00:00</string>
           </property>
          </item>
          <item row="7" column="2">
           <property name="text">
-           <string>17:00:00</string>
+           <string>04/01/2023</string>
           </property>
          </item>
          <item row="7" column="3">
           <property name="text">
-           <string>04/01/2023</string>
-          </property>
-         </item>
-         <item row="7" column="4">
-          <property name="text">
            <string>Logout</string>
           </property>
          </item>
-         <item row="7" column="5">
+         <item row="7" column="4">
           <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
          </item>
          <item row="8" column="0">
           <property name="text">
-           <string>user1</string>
+           <string>First User</string>
           </property>
          </item>
          <item row="8" column="1">
           <property name="text">
-           <string>First User</string>
+           <string>18:30:40</string>
           </property>
          </item>
          <item row="8" column="2">
           <property name="text">
-           <string>18:30:40</string>
+           <string>05/01/2023 </string>
           </property>
          </item>
          <item row="8" column="3">
           <property name="text">
-           <string>05/01/2023 </string>
-          </property>
-         </item>
-         <item row="8" column="4">
-          <property name="text">
            <string>Login PW Failed</string>
           </property>
          </item>
-         <item row="8" column="5">
+         <item row="8" column="4">
           <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
          </item>
          <item row="9" column="0">
           <property name="text">
-           <string>user1</string>
+           <string>First User</string>
           </property>
          </item>
          <item row="9" column="1">
           <property name="text">
-           <string>First User</string>
+           <string>18:32:00</string>
           </property>
          </item>
          <item row="9" column="2">
           <property name="text">
-           <string>18:32:00</string>
+           <string>05/01/2023 </string>
           </property>
          </item>
          <item row="9" column="3">
           <property name="text">
-           <string>05/01/2023 </string>
-          </property>
-         </item>
-         <item row="9" column="4">
-          <property name="text">
            <string>Login PW Failed</string>
           </property>
          </item>
-         <item row="9" column="5">
+         <item row="9" column="4">
           <property name="text">
            <string>Laptop Dell AA12</string>
           </property>
@@ -2262,6 +2157,8 @@ QPushButton::pressed{background-color :rgb(50, 50,50);}</string>
         </widget>
        </item>
       </layout>
+      <zorder>frame_5</zorder>
+      <zorder>tableAdminPanel_LoginList</zorder>
      </widget>
     </widget>
    </item>
@@ -2285,6 +2182,13 @@ QPushButton::pressed{background-color :rgb(50, 50,50);}</string>
        <widget class="Line" name="line_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="messege">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
