@@ -72,6 +72,7 @@ class AdminPanel(QtWidgets.QDialog):
             cusror.execute("INSERT INTO auth_user(USERNAME, PASSWORD, USERGROUP, ACTIVATED)VALUES(?,?,?,?)",(username,password,usergroup,True))
             database.commit()
             self.msg.setText("New User Added!")
+            self.showUsers()
             return "inserted"
         except:
             self.msg.setText("There is a problem. Try later.")
