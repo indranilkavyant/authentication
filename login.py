@@ -102,6 +102,7 @@ class ForgetPassword(QtWidgets.QDialog):
             if user:
                 if len(self.new_password.text()) >= 7:
                     if self.new_password.text() == self.re_new_password.text():
+                        cusror.execute("INSERT INTO login_record (USERNAME, STATUS, COMPUTERNAME) VALUES(?,?,?)",(self.login_id.text(), 'Changed Password', platform.node()))
                         cusror.execute(f"UPDATE auth_user SET PASSWORD = '{md5(bytes(self.re_new_password.text(),'utf-8')).hexdigest()}' WHERE USERNAME = '{self.login_id.text()}' AND PASSWORD = '{md5(bytes(self.password.text(),'utf-8')).hexdigest()}'")
                         database.commit()
                         self.messege.setText("Password has been changed!")  
@@ -167,6 +168,7 @@ class Login(QtWidgets.QDialog):
                 cusror.execute(f"SELECT * FROM auth_user WHERE USERNAME = '{self.username.text()}' AND PASSWORD = '{password}'")     
                 user = cusror.fetchall()
                 if user:
+                    cusror.execute("INSERT INTO login_record (USERNAME, STATUS, COMPUTERNAME) VALUES(?,?,?)",(self.username.text(), 'Login Success', platform.node()))
                     cusror.execute(f"UPDATE login_count SET COUNT = '5' WHERE HOST = '{platform.node()}'")
                     database.commit()
                     if user[0][3] == 'admin':
@@ -175,6 +177,7 @@ class Login(QtWidgets.QDialog):
                         print("Welcome to main app!")
                 else :
                     cusror.execute(f"UPDATE login_count SET COUNT = '{count[0][0]-1}' WHERE HOST = '{platform.node()}'")
+                    cusror.execute("INSERT INTO login_record (USERNAME, STATUS, COMPUTERNAME) VALUES(?,?,?)",(self.username.text(), 'Incorrect Credential', platform.node()))
                     database.commit()
                     self.fail.setText(f"Incorrect Credential! Attempts left : {count[0][0]-1}")    
             else :
