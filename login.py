@@ -129,18 +129,22 @@ class AdminPanel(QtWidgets.QDialog):
         except Exception as e:
             print(e)
             
-    def deactivateuser(self):
+    def active_or_deactivateuser(self):
         username =self.users.currentText()
-        try:
-            cusror.execute("UPDATE auth_user SET ACTIVATED = 0 WHERE USERNAME= ? ",( username,))
-        except:
-            pass
-    def activateuser(self):
-        username =self.users.currentText()
-        try:
-            cusror.execute("UPDATE auth_user SET ACTIVATED = 1 WHERE USERNAME= ? ",( username,))
-        except:
-            pass
+        row=cusror.execute("SELECT * FROM auth_user WHERE USERNAME= ? ",( username))
+        data = row.fetchall()
+        if data[0][4] ==1:
+            try:
+                cusror.execute("UPDATE auth_user SET ACTIVATED = 0 WHERE USERNAME= ? ",( username,))
+            except:
+                pass
+        else:
+            try:
+                cusror.execute("UPDATE auth_user SET ACTIVATED = 1 WHERE USERNAME= ? ",( username,))
+            except:
+                pass
+
+        database.commit()
     
     def remove_user(self):
         username =self.users.currentText()
