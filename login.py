@@ -114,12 +114,7 @@ class AdminPanel(QtWidgets.QDialog):
         user_record_with_header = [("ID","USERNAME","PASSWORD","USERGROUP", "ACTIVATED","CREATED_AT")]+user_record
         data = pd.DataFrame(user_record_with_header)
         data.to_csv("users_record.csv")
-        os.startfile("users_record.csv","print")
-
-    def print_record(self):
-        cusror.execute("SELECT * FROM login_record")
-        login_records = cusror.fetchall()
-        data = pd.DataFrame(login_records)      
+        os.startfile("users_record.csv","print")    
 
 
     def insertuser(self):
