@@ -29,11 +29,13 @@ class AdminPanel(QtWidgets.QDialog):
         self.users =self.findChild(QtWidgets.QComboBox,"userlist")
         self.admin_panel.buttonAdminPanel_AddUser.clicked.connect(self.insertuser)
         self.admin_panel.buttonAdminPanel_RemoveUser.clicked.connect(self.remove_user)
-        self.admin_panel.buttonAdminPanel_ActivateUser.clicked.connect(self.activateuser)
         self.admin_panel.buttonAdminPanel_ResetUserPassword.clicked.connect(self.changepassword)
         self.admin_panel.buttonAdminPanel_ExportLoginList.clicked.connect(self.export_login_record)
         self.admin_panel.buttonAdminPanel_ExportUserList.clicked.connect(self.export_user_record)
         self.admin_panel.buttonPasswordReset_Cancel.clicked.connect(self.close)
+        self.admin_panel.buttonAdminPanel_ActivateUser.clicked.connect(self.active_or_deactivateuser)
+        self.admin_panel.buttonAdminPanel_PrintUserList.clicked.connect(self.print_userrecord)
+        self.admin_panel.buttonAdminPanel_PrintLoginList_3.clicked.connect(self.print_login_record)
         
         self.msg = self.findChild(QtWidgets.QLabel,"messege")
         self.msg.setStyleSheet("color: rgb(200, 50, 50);font: bold;font-size:15px;")
@@ -155,11 +157,15 @@ class AdminPanel(QtWidgets.QDialog):
         if data[0][4] ==1:
             try:
                 cusror.execute("UPDATE auth_user SET ACTIVATED= 0 WHERE USERNAME= ? ",( username,))
+                self.msg.setText(f"Deactivated user : {username}")
+                self.showUsers()
             except:
                 pass
         else:
             try:
                 cusror.execute("UPDATE auth_user SET ACTIVATED= 1 WHERE USERNAME= ? ",( username,))
+                self.msg.setText(f"Activated user : {username}")
+                self.showUsers()
             except:
                 pass
 
@@ -263,7 +269,7 @@ class Login(QtWidgets.QDialog):
             
             if count[0][0] > 0 :
                 password = md5(bytes(self.password.text(),"utf-8")).hexdigest()
-                cusror.execute(f"SELECT * FROM auth_user WHERE USERNAME = '{self.username.text()}' AND PASSWORD = '{password}'")     
+                cusror.execute(f"SELECT * FROM auth_user WHERE USERNAME = '{self.username.text()}' AND PASSWORD = '{password}' AND ACTIVATED = '1'")     
                 user = cusror.fetchall()
                 if user:
                     cusror.execute("INSERT INTO login_record (USERNAME, STATUS, COMPUTERNAME) VALUES(?,?,?)",(self.username.text(), 'Login Success', platform.node()))
