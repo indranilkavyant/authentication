@@ -150,16 +150,16 @@ class AdminPanel(QtWidgets.QDialog):
             
     def active_or_deactivateuser(self):
         username =self.users.currentText()
-        row=cusror.execute("SELECT * FROM auth_user WHERE USERNAME= ? ",( username))
+        row=cusror.execute("SELECT * FROM auth_user WHERE USERNAME= ? ",( username, ))
         data = row.fetchall()
         if data[0][4] ==1:
             try:
-                cusror.execute("UPDATE auth_user SET ACTIVATED = 0 WHERE USERNAME= ? ",( username,))
+                cusror.execute("UPDATE auth_user SET ACTIVATED= 0 WHERE USERNAME= ? ",( username,))
             except:
                 pass
         else:
             try:
-                cusror.execute("UPDATE auth_user SET ACTIVATED = 1 WHERE USERNAME= ? ",( username,))
+                cusror.execute("UPDATE auth_user SET ACTIVATED= 1 WHERE USERNAME= ? ",( username,))
             except:
                 pass
 
