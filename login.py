@@ -4,6 +4,7 @@ import sys
 import sqlite3 as db
 import platform
 import pandas as pd
+import os
 
 # ==================== Database Connection and table creation if no exist =======================
 database = db.connect("kavyant.db")
@@ -86,6 +87,24 @@ class AdminPanel(QtWidgets.QDialog):
         data = pd.DataFrame(login_record_with_header)
         data.to_csv("login_record.csv")
         self.msg.setText("Login records successfully exported!")
+    
+    def print_login_record(self):
+        cusror.execute("SELECT * FROM login_record")
+        login_records = cusror.fetchall()
+        login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
+        data = pd.DataFrame(login_record_with_header)
+        data.to_csv("login_record.csv")
+        os.startfile("login_record.csv","print")
+
+    
+    def print_login_record(self):
+        cusror.execute("SELECT * FROM login_record")
+        login_records = cusror.fetchall()
+        login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
+        data = pd.DataFrame(login_record_with_header)
+        data.to_csv("login_record.csv")
+        os.startfile("login_record.csv","print")
+
 
     def export_user_record(self):
         cusror.execute("SELECT * FROM auth_user")
@@ -93,7 +112,7 @@ class AdminPanel(QtWidgets.QDialog):
         user_record_with_header = [("ID","USERNAME","PASSWORD","USERGROUP", "ACTIVATED","CREATED_AT")]+user_record
         data = pd.DataFrame(user_record_with_header)
         data.to_csv("users_record.csv")
-        self.msg.setText("User list successfully exported!")
+        os.startfile("users_record.csv","print")
 
     def print_record(self):
         cusror.execute("SELECT * FROM login_record")
