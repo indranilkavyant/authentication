@@ -4,6 +4,7 @@ import sys
 import sqlite3 as db
 import platform
 import pandas as pd
+from datetime import datetime
 import os
 
 # ==================== Database Connection and table creation if no exist =======================
@@ -16,6 +17,17 @@ cusror.execute("CREATE TABLE IF NOT EXISTS action_record (ID INTEGER PRIMARY KEY
 cusror.execute("CREATE TABLE IF NOT EXISTS login_record  (ID INTEGER PRIMARY KEY AUTOINCREMENT , USERNAME VARCHAR(256),STATUS VARCHAR(20), COMPUTERNAME VARCHAR(150) , EXTRA1 TEXT DEFAULT NULL, EXTRA2 TEXT DEFAULT NULL, ATTEMPTED_AT DATETIME NOT NULL DEFAULT (datetime('now','localtime')) )") 
 
 # ==================== Database Connection and table creation if no exist =======================
+def convertdate(date_string):
+
+
+
+    
+    date_time = datetime.strptime(date_string, '%m/%d/%Y %I:%M %p')
+    
+    # Convert the datetime object to a string using the strftime method
+    new_date_string = date_time.strftime('%Y-%m-%d %H:%M:%S')
+    
+    return new_date_string
 
 class AdminPanel(QtWidgets.QDialog):
     def __init__(self):
@@ -36,6 +48,8 @@ class AdminPanel(QtWidgets.QDialog):
         self.admin_panel.buttonAdminPanel_ActivateUser.clicked.connect(self.active_or_deactivateuser)
         self.admin_panel.buttonAdminPanel_PrintUserList.clicked.connect(self.print_userrecord)
         self.admin_panel.buttonAdminPanel_PrintLoginList_3.clicked.connect(self.print_login_record)
+        self.loginreport_start_date = self.findChild(QtWidgets.QDateTimeEdit,"dateTimeAdminPanel_LoginsFrom")
+        self.login_report_end_date = self.findChild(QtWidgets.QDateTimeEdit,"dateTimeAdminPanel_LoginsTill")
         
         self.msg = self.findChild(QtWidgets.QLabel,"messege")
         self.msg.setStyleSheet("color: rgb(200, 50, 50);font: bold;font-size:15px;")
@@ -83,15 +97,24 @@ class AdminPanel(QtWidgets.QDialog):
             self.tableWidget.setItem(id,6, QtWidgets.QTableWidgetItem(""))
 
     def export_login_record(self):
-        cusror.execute("SELECT * FROM login_record")
+
+        start_date =convertdate(self.loginreport_start_date.text())
+        end_date   = convertdate(self.login_report_end_date.text())
+        cusror.execute("SELECT * FROM login_record WHERE ATTEMPTED_AT BETWEEN ? AND ?", (start_date, end_date))
         login_records = cusror.fetchall()
-        login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
-        data = pd.DataFrame(login_record_with_header)
-        data.to_csv("login_record.csv")
-        self.msg.setText("Login records successfully exported!")
+        if len(login_records) >0:
+
+            login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
+            data = pd.DataFrame(login_record_with_header)
+            data.to_csv("login_record.csv")
+            self.msg.setText("Login records successfully exported!")
+        else:
+            self.msg.setText("No data Found !")
     
     def print_login_record(self):
-        cusror.execute("SELECT * FROM login_record")
+        start_date =convertdate(self.loginreport_start_date.text())
+        end_date   = convertdate(self.login_report_end_date.text())
+        cusror.execute("SELECT * FROM login_record WHERE ATTEMPTED_AT BETWEEN ? AND ?", (start_date, end_date))
         login_records = cusror.fetchall()
         login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
         data = pd.DataFrame(login_record_with_header)
