@@ -97,7 +97,7 @@ class AdminPanel(QtWidgets.QDialog):
         os.startfile("login_record.csv","print")
 
     
-    def print_login_record(self):
+    def print_userrecord(self):
         cusror.execute("SELECT * FROM login_record")
         login_records = cusror.fetchall()
         login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
