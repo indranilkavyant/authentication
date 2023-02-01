@@ -17,13 +17,11 @@ cusror.execute("CREATE TABLE IF NOT EXISTS action_record (ID INTEGER PRIMARY KEY
 cusror.execute("CREATE TABLE IF NOT EXISTS login_record  (ID INTEGER PRIMARY KEY AUTOINCREMENT , USERNAME VARCHAR(256),STATUS VARCHAR(20), COMPUTERNAME VARCHAR(150) , EXTRA1 TEXT DEFAULT NULL, EXTRA2 TEXT DEFAULT NULL, ATTEMPTED_AT DATETIME NOT NULL DEFAULT (datetime('now','localtime')) )") 
 
 # ==================== Database Connection and table creation if no exist =======================
-def convertdate(date_string):
-
-
-
-    
-    date_time = datetime.strptime(date_string, '%m/%d/%Y %I:%M %p')
-    
+def convertdate(date_string): 
+    try:
+        date_time = datetime.strptime(date_string, '%m/%d/%Y %I:%M %p')
+    except:
+        date_time = datetime.strptime(date_string, '%d-%m-%Y %I:%M %p')
     # Convert the datetime object to a string using the strftime method
     new_date_string = date_time.strftime('%Y-%m-%d %H:%M:%S')
     
@@ -96,10 +94,9 @@ class AdminPanel(QtWidgets.QDialog):
             self.tableWidget.setItem(id,5, QtWidgets.QTableWidgetItem(""))
             self.tableWidget.setItem(id,6, QtWidgets.QTableWidgetItem(""))
 
-    def export_login_record(self):
-
+    def export_login_record(self):      
         start_date =convertdate(self.loginreport_start_date.text())
-        end_date   = convertdate(self.login_report_end_date.text())
+        end_date  = convertdate(self.login_report_end_date.text())
         cusror.execute("SELECT * FROM login_record WHERE ATTEMPTED_AT BETWEEN ? AND ?", (start_date, end_date))
         login_records = cusror.fetchall()
         if len(login_records) >0:
@@ -116,19 +113,22 @@ class AdminPanel(QtWidgets.QDialog):
         end_date   = convertdate(self.login_report_end_date.text())
         cusror.execute("SELECT * FROM login_record WHERE ATTEMPTED_AT BETWEEN ? AND ?", (start_date, end_date))
         login_records = cusror.fetchall()
-        login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
-        data = pd.DataFrame(login_record_with_header)
-        data.to_csv("login_record.csv")
-        os.startfile("login_record.csv","print")
+        if len(login_records) >0:
+            login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
+            data = pd.DataFrame(login_record_with_header)
+            data.to_csv("login_record.csv")
+            os.startfile("login_record.csv","print")
+        else:
+            self.msg.setText("No data Found !")
 
     
     def print_userrecord(self):
-        cusror.execute("SELECT * FROM login_record")
+        cusror.execute("SELECT * FROM auth_user")
         login_records = cusror.fetchall()
         login_record_with_header = [("ID","USERNAME","STATUS","COMPUTERNAME", "EXTRA1","EXTRA2","ATTEMPT_AT")]+login_records
         data = pd.DataFrame(login_record_with_header)
-        data.to_csv("login_record.csv")
-        os.startfile("login_record.csv","print")
+        data.to_csv("users_record.csv")
+        os.startfile("users_record.csv","print")
 
 
     def export_user_record(self):
@@ -137,7 +137,7 @@ class AdminPanel(QtWidgets.QDialog):
         user_record_with_header = [("ID","USERNAME","PASSWORD","USERGROUP", "ACTIVATED","CREATED_AT")]+user_record
         data = pd.DataFrame(user_record_with_header)
         data.to_csv("users_record.csv")
-        os.startfile("users_record.csv","print")    
+        self.msg.setText("User records successfully exported!")
 
 
     def insertuser(self):
